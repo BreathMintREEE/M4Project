@@ -1,3 +1,8 @@
+// TaskNotFoundException.java
+// D. Singletary
+// 9/10/25
+// Exception for handling Task not found cases
+
 package edu.fscj.cen3024c.taskmanager.exceptions;
 
 import org.springframework.http.HttpStatus;
