@@ -2,9 +2,7 @@
 // D. Singletary
 // 9/10/25
 // Task service for task manager application
-
 package edu.fscj.cen3024c.taskmanager.services;
-
 import edu.fscj.cen3024c.taskmanager.dto.TaskDTO;
 import edu.fscj.cen3024c.taskmanager.entities.Subtask;
 import edu.fscj.cen3024c.taskmanager.entities.Task;
@@ -13,22 +11,16 @@ import edu.fscj.cen3024c.taskmanager.exceptions.TaskNotFoundException;
 import edu.fscj.cen3024c.taskmanager.repositories.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 @Service
 public class TaskService {
-
     private final TaskRepository taskRepository;
-
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
-
     // CRUD Methods with DTO conversion
-
     @Transactional(readOnly = true)
     public List<TaskDTO> findAll() {
         return taskRepository.findAll()
@@ -63,6 +55,7 @@ public class TaskService {
         existingTask.setStatus(taskDetails.getStatus());
         existingTask.setDueDate(taskDetails.getDueDate());
         existingTask.setPriority(taskDetails.getPriority());
+        existingTask.setUsers(taskDetails.getUsers());
         Task updatedTask = taskRepository.save(existingTask);
         return convertToDTO(updatedTask);
     }
@@ -80,21 +73,18 @@ public class TaskService {
         String priorityLevel = (task.getPriority() != null)
                 ? task.getPriority().getLevel().name()
                 : null;
-
         List<String> subtaskTitles = (task.getSubtasks() != null)
                 ? task.getSubtasks().stream()
-                .map(Subtask::getTitle)
-                .collect(Collectors.toList())
+                  .map(Subtask::getTitle)
+                  .collect(Collectors.toList())
                 : List.of();
-
         Set<String> usernames = (task.getUsers() != null)
                 ? task.getUsers().stream()
-                .map(User::getUsername)
-                .collect(Collectors.toSet())
+                  .map(User::getUsername)
+                  .collect(Collectors.toSet())
                 : Set.of();
-
         return new TaskDTO(
-                task.getId(),                     // include id
+                task.getId(),
                 task.getTitle(),
                 task.getDescription(),
                 task.getStatus(),
